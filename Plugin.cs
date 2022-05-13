@@ -2,7 +2,6 @@
 using BepInEx.Logging;
 using Miniscript;
 using HarmonyLib;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,6 +29,7 @@ namespace RDVertPlugin
             interpreter.RunUntilDone(0.01);
 
             Harmony.CreateAndPatchAll(typeof(PatchScnMenu));
+            Harmony.CreateAndPatchAll(typeof(PatchRDString));
         }
 
         private void OnDestroy()
@@ -41,28 +41,6 @@ namespace RDVertPlugin
         {
             interpreter.Reset(sourceCode);
             interpreter.Compile();
-        }
-
-        public static class PatchScnMenu
-        {
-            [HarmonyPostfix]
-            [HarmonyPatch(typeof(scnMenu), "Awake")]
-            public static void Awake(scnMenu __instance, ref Text[] ___optionsText)
-            {
-                ___optionsText[6].text = "Project VERT :eyes:";
-            }
-
-            [HarmonyPrefix]
-            [HarmonyPatch(typeof(scnMenu), "SelectOption")]
-            public static bool SelectOption(scnMenu __instance, int ___currentOption)
-            {
-                if (___currentOption == 6)
-                {
-                    RDVertPlugin.Log.LogInfo("Block entering the OST");
-                    return false;
-                }
-                return true;
-            }
         }
     }
 }
