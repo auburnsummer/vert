@@ -28,6 +28,7 @@ namespace RDVertPlugin
         private void OnDestroy()
         {
             Harmony.UnpatchAll();
+            NowHijacking = false;
         }
     }
 }

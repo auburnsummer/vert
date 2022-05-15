@@ -39,6 +39,7 @@ namespace RDVertPlugin
                 return;
             }
             // intrinstics.
+
             // input(str key) -> bool
             // return true if given key is pressed, otherwise false.
             // note: miniscript booleans are actually numbers 1 and 0
@@ -52,6 +53,29 @@ namespace RDVertPlugin
                     return Intrinsic.Result.True;
                 }
                 return Intrinsic.Result.False;
+            };
+
+            // pressed(str key) -> bool
+            // return true if given key is JUST pressed, otherwise false.
+            var pressed = Intrinsic.Create("pressed");
+            pressed.AddParam("key");
+            pressed.code = (context, partialResult) =>
+            {
+                string key = context.GetVar("key").ToString();
+                if (Input.GetKeyDown(key))
+                {
+                    return Intrinsic.Result.True;
+                }
+                return Intrinsic.Result.False;
+            };
+
+            // exit() -> void
+            // exit to the outside context. for now, this is always scnMenu.
+            var _exit = Intrinsic.Create("exit");
+            _exit.code = (context, partialResult) =>
+            {
+                scnBase.GoToMainMenu();
+                return Intrinsic.Result.Null;
             };
 
 
@@ -97,6 +121,12 @@ namespace RDVertPlugin
                 return false;
             }
             return true;
+        }
+
+        public static void Destroy()
+        {
+            interpreter.Stop();
+            interpreter.Reset("");
         }
 
         [HarmonyPrefix]
