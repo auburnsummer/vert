@@ -21,7 +21,7 @@ namespace RDVertPlugin
     public static class PatchScnLogo
     {
 
-        static scnBase scn;
+        static Camera cam;
 
         static Interpreter interpreter;
         static bool intrinsticsAdded = false;
@@ -78,6 +78,14 @@ namespace RDVertPlugin
                 return Intrinsic.Result.Null;
             };
 
+            // camera() -> Camera
+            // return the main Camera. technically this is a MiniScript object that represents the Camera, and not the actual Camera.
+            var _camera = Intrinsic.Create("camera");
+            _camera.code = (context, partialResult) =>
+            {
+                ValMap cameraMap = Pickles.PickleCamera(cam);
+                return new Intrinsic.Result(cameraMap, true);
+            };
 
             intrinsticsAdded = true;
         }
@@ -100,9 +108,6 @@ namespace RDVertPlugin
                         UnityEngine.Object.Destroy(obj);
                     }
                 }
-                // hmmm, do I have a scnBase somewhere? nice I do
-                scnBase scnCurrent = __instance.scnCurrent;
-                PatchScnLogo.scn = scnCurrent;
 
                 SetUpInterpreter();
 
@@ -118,6 +123,9 @@ namespace RDVertPlugin
                 interpreter.Reset(bootstrapMsFile);
                 interpreter.Compile();
 
+                Camera camera = __instance.GetComponent<Camera>();
+                cam = camera;
+                cam.backgroundColor = Color.red;
                 return false;
             }
             return true;
