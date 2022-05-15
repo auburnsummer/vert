@@ -2,6 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.Reflection;
+using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.IO;
 
 namespace RDVertPlugin
 {
@@ -36,7 +40,15 @@ namespace RDVertPlugin
             // handles lots of menu options.
             ___optionsContainer.offsetMax = ___optionsContainer.offsetMax.WithY(12f);
 
+            // if the prefix returns true, this tells bepinex to move onto the canonical function.
             return true;
+        }
+
+        [HarmonyReversePatch]
+        [HarmonyPatch(typeof(scnMenu), "TransitionToScene")]
+        public static void TransitionToScene(scnMenu instance, string scene)
+        {
+            throw new NotImplementedException("It's a stub");
         }
 
         [HarmonyPostfix]
@@ -49,10 +61,20 @@ namespace RDVertPlugin
         {
             // todo
             string name = ___optionsText[___currentOption].gameObject.name;
-            RDVertPlugin.Log.LogInfo(name);
+            Vert.Log.LogInfo(name);
             if (String.Equals(name, "VertMenuOption"))
             {
-                RDVertPlugin.Log.LogInfo("Entering VERT......");
+                Vert.Log.LogInfo("Entering VERT......");
+                string[] resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+                foreach (string resource in resourceNames)
+                {
+                    Vert.Log.LogInfo(resource);
+                }
+                // okay so you can't make scenes at runtime
+                // there is a way to make scenes by importing an "AssetBundle" but it sounds complicated
+                // instead we're going to hijack scnLogo
+                Vert.NowHijacking = true;
+                TransitionToScene(__instance, "scnLogo");
             }
         }
     }
