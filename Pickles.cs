@@ -11,45 +11,42 @@ namespace RDVertPlugin
     static class Pickles
     {
 
-        public static double[] GetColorList(Color c)
+
+        public static ValString PickleColor(Color c)
         {
-            return new double[] { c.r, c.g, c.b, c.a };
+            string hex = c.a == 1 ? ColorUtility.ToHtmlStringRGB(c) : ColorUtility.ToHtmlStringRGBA(c);
+            return new ValString("#" + hex);
         }
 
-        public static ValList PickleColor(Color c)
+        public static Color UnpickleColor(ValString s)
         {
-            ValList mcolor = new ValList();
-            foreach (double d in GetColorList(c))
+            Color c = new Color(0, 0, 0, 1);
+            bool ok = ColorUtility.TryParseHtmlString(s.value, out c);
+            if (!ok)
             {
-                mcolor.values.Add(new ValNumber(d));
+                Vert.Log.LogWarning(String.Format("Color {0} not parsable, defaulting to black", s.value));
             }
-            return mcolor;
-        }
-
-        public static Color UnpickleColor(ValList v)
-        {
-            var values = v.values.Select(v => v.FloatValue()).ToArray();
-            Color c = new Color(
-                values[0],
-                values[1],
-                values[2],
-                values[3]
-            );
             return c;
         }
 
         public static ValMap PickleCamera(Camera c)
         {
+            // return the camera's bg colour.
+            // this is an anonymous intrinsic, only accessible via camera.backgroundColor
+            var __cameraBgColor = Intrinsic.Create("");
+            __cameraBgColor.code = (context, partialResult) =>
+            {
+                return new Intrinsic.Result(PickleColor(c.backgroundColor), true);
+            };
             ValMap cameraMap = new ValMap();
-            ValList backgroundColor = PickleColor(c.backgroundColor);
-            cameraMap["backgroundColor"] = backgroundColor;
+            cameraMap["backgroundColor"] = __cameraBgColor.GetFunc();
 
             cameraMap.assignOverride = (key, value) =>
             {
                 switch (key.ToString())
                 {
                     case "backgroundColor":
-                        c.backgroundColor = UnpickleColor(value as ValList);
+                        c.backgroundColor = UnpickleColor(value as ValString);
                         return true;
                 }
                 return false;

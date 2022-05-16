@@ -1,5 +1,5 @@
 ﻿cam = camera()
-cam.backgroundColor = [0, 0, 1, 1];
+cam.backgroundColor = "red"
 
 addUpToOne = function (a, b)
 	temp = a + b
@@ -12,11 +12,11 @@ end function
 while true
 	if pressed("up") then
 		print "Hello World"
-		cam.backgroundColor = [1, 1, 0, 1];
+		cam.backgroundColor = "cyan";
 	end if
 	if pressed("down") then
 		print "now it is down instead"
-		cam.backgroundColor = [1, 0, 1, 1];
+		cam.backgroundColor = "#eddfb7";
 		print(cam.backgroundColor)
 	end if
 	if pressed("escape") then
