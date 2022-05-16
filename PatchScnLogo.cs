@@ -123,9 +123,18 @@ namespace RDVertPlugin
                 interpreter.Reset(bootstrapMsFile);
                 interpreter.Compile();
 
+                // set some "globals".
                 Camera camera = __instance.GetComponent<Camera>();
                 cam = camera;
                 cam.backgroundColor = Color.red;
+
+                // behold the cube
+                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                cube.name = "brown_cube";
+                Color brown = new Color(139f / 255f, 69f / 255f, 19f / 255f, 1f);
+                cube.GetComponent<Renderer>().material.color = brown;
+
+                // don't play scnLogo's Start.
                 return false;
             }
             return true;
