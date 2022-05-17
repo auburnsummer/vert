@@ -20,8 +20,11 @@ namespace RDVertPlugin
      */
     public static class PatchScnLogo
     {
-
+        // a reference to the existing camera in scnLogo
         static Camera cam;
+
+        // a quad??
+        static GameObject quad;
 
         static Interpreter interpreter;
         static bool intrinsticsAdded = false;
@@ -128,11 +131,18 @@ namespace RDVertPlugin
                 cam = camera;
                 cam.backgroundColor = Color.red;
 
-                // behold the cube
-                GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cube.name = "brown_cube";
+                // set the orthrographic size.
+                // some guy on the unity forums said to do this
+                cam.orthographicSize = cam.pixelHeight / 2;
+
+                // behold the ~~cube~~ quad
+                // scale it so that it fits the whole screen.
+                // in an orthrographic camera, we don't have to worry about perspective from the distance between quad and camera.
+                quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                quad.name = "hi_i_am_a_quad";
                 Color brown = new Color(139f / 255f, 69f / 255f, 19f / 255f, 1f);
-                cube.GetComponent<Renderer>().material.color = brown;
+                quad.GetComponent<Renderer>().material.color = brown;
+                quad.GetComponent<Transform>().ScaleXY(cam.pixelWidth, cam.pixelHeight);
 
                 // don't play scnLogo's Start.
                 return false;
