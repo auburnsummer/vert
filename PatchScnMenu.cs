@@ -59,7 +59,6 @@ namespace RDVertPlugin
             Text[] ___optionsText
            )
         {
-            // todo
             string name = ___optionsText[___currentOption].gameObject.name;
             Vert.Log.LogInfo(name);
             if (String.Equals(name, "VertMenuOption"))
@@ -74,7 +73,13 @@ namespace RDVertPlugin
                 // there is a way to make scenes by importing an "AssetBundle" but it sounds complicated
                 // instead we're going to hijack scnLogo
                 Vert.NowHijacking = true;
-                TransitionToScene(__instance, "scnLogo");
+                ConfigureRDEditorConstants.Configure();
+                TransitionToScene(__instance, "scnEditor");
+            } else
+            {
+                // we still want you to be able to quit out and go to normal editor.
+                Vert.NowHijacking = false;
+                ConfigureRDEditorConstants.Unconfigure();
             }
         }
     }

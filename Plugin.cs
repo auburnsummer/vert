@@ -22,8 +22,11 @@ namespace RDVertPlugin
 
             Harmony.CreateAndPatchAll(typeof(PatchScnMenu));
             Harmony.CreateAndPatchAll(typeof(PatchRDString));
-            Harmony.CreateAndPatchAll(typeof(PatchScnLogo));
-        }
+            Harmony.CreateAndPatchAll(typeof(PatchRDFile));
+            Harmony.CreateAndPatchAll(typeof(PatchStandaloneFileBrowser));
+            Harmony.CreateAndPatchAll(typeof(PatchScnEditor));
+/*            Harmony.CreateAndPatchAll(typeof(PatchScnLogo));
+*/        }
 
         private void OnDestroy()
         {

@@ -10,7 +10,7 @@ namespace RDVertPlugin
         {
             if (key == "mainMenu.VertMenuOption")
             {
-                __result = "Project VERT :eyes:";
+                __result = "Project VERT rdlevel version :eyes:";
                 return false;
             }
             return true;
