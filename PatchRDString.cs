@@ -13,6 +13,12 @@ namespace RDVertPlugin
                 __result = "Project VERT rdlevel version :eyes:";
                 return false;
             }
+            if (key == "editor.2782")
+            {
+                // 0x0ade = 2782
+                __result = "Run Script";
+                return false;
+            }
             return true;
         }
     }
