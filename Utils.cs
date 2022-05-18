@@ -19,7 +19,6 @@ namespace RDVertPlugin
                 type = a.GetType(typeName);
                 if (type != null)
                 {
-                    Vert.Log.LogInfo("catch!");
                     return type;
                 }
             }

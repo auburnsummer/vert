@@ -26,6 +26,11 @@ namespace RDVertPlugin
         {
             var codeMatcher = new CodeMatcher(instructions, il);
 
+            // RD creates events using mscorlib System.Type.GetType(string) (i.e. RDLevelEditor.LevelEvent_{name})
+            // we can, in Harmony, add new classes to the RDLevelEditor namespace, but the lookup doesn't work. why?
+            // because Type.GetType only looks in the *executing assembly*, which is Assembly-CSharp.dll, and our code lives in RDVertPlugin.dll!
+            // instead, we create a new version of GetType that works outside of Assembly-CSharp, and replace the call.
+
             return codeMatcher
                 .MatchForward(false,
                     new CodeMatch(OpCodes.Call, AccessTools.Method(typeof(System.Type), "GetType", new Type[] { typeof(string) }))
