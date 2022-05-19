@@ -22,11 +22,32 @@ namespace RDVertPlugin
         {
             Vert.Log.LogInfo("We are here now");
             // hmmmmmmmmmmmmm
+            var pathToContentGameObject = "Canvas/Level Editor Panel/MovementPanel/Left Panel (Inspector)/InspectorPanelManager/Viewport/Content";
+            var contentGameObject = GameObject.Find(pathToContentGameObject);
+            var contentGameObjectTransform = contentGameObject.transform;
+            Vert.Log.LogInfo(contentGameObject.name);
+            Vert.Log.LogInfo("=====================");
             InspectorPanel[] componentsInChildren =  Resources.FindObjectsOfTypeAll<InspectorPanel>();
             Vert.Log.LogInfo(componentsInChildren.Length);
             foreach (InspectorPanel component in componentsInChildren)
             {
+                if (component.name == "Comment")
+                {
+                    // we're using Comment as a base to construct our panel.
+                    var templateGameObject = component.gameObject;
+                    var ourNewGameObject = GameObject.Instantiate(templateGameObject, contentGameObjectTransform);
+                    // now, ourNewGameObject has everything that templateGameObject has.....
+                    // afaik, all gameobjects have a transform that indicate that gameobject's position.
+                    // this has one of those too! the transform is right where a panel should be, so we don't touch it.
+                    // since we cloned Comment, it's also got a InspectorPanel_Comment attached. let's yeet that first...
+                    ourNewGameObject.name = "RunScript";
+                    Component.Destroy(ourNewGameObject.GetComponent<InspectorPanel>());
+                    // and attach our new inspector panel!
+                    InspectorPanel_2782 panel = (InspectorPanel_2782)ourNewGameObject.AddComponent(typeof(InspectorPanel_2782));
+                    
+                }
                 Vert.Log.LogInfo(component.name);
+                Vert.Log.LogInfo(component.gameObject.name);
             }
 
             return true;
