@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace RDVertPlugin
 {
@@ -13,10 +14,21 @@ namespace RDVertPlugin
     {
         static Dictionary<LevelEventType, Tab> oldConstants = new Dictionary<LevelEventType, Tab>();
 
+        static GameObject runScriptThingo;
+
         [HarmonyPrefix]
         [HarmonyPatch(typeof(scnEditor), "Start")]
         public static bool Start(scnEditor __instance)
         {
+            Vert.Log.LogInfo("We are here now");
+            // hmmmmmmmmmmmmm
+            InspectorPanel[] componentsInChildren =  Resources.FindObjectsOfTypeAll<InspectorPanel>();
+            Vert.Log.LogInfo(componentsInChildren.Length);
+            foreach (InspectorPanel component in componentsInChildren)
+            {
+                Vert.Log.LogInfo(component.name);
+            }
+
             return true;
         }
 
