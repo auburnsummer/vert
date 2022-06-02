@@ -28,23 +28,14 @@ namespace RDVertPlugin
                 typeof(PatchRDFile),
                 typeof(PatchStandaloneFileBrowser),
                 typeof(PatchScnEditor),
-                typeof(PatchLevelEvent_Base),
-                typeof(PatchResources)
+                typeof(PatchLevelEvent_Base)
             };
 
             foreach (Type patch in patches)
             {
                 Harmony.CreateAndPatchAll(patch);
             }
-
-/*            Harmony.CreateAndPatchAll(typeof(PatchScnMenu));
-            Harmony.CreateAndPatchAll(typeof(PatchRDString));
-            Harmony.CreateAndPatchAll(typeof(PatchRDFile));
-            Harmony.CreateAndPatchAll(typeof(PatchStandaloneFileBrowser));
-            Harmony.CreateAndPatchAll(typeof(PatchScnEditor));
-            Harmony.CreateAndPatchAll(typeof(PatchLevelEvent_Base));*/
-/*            Harmony.CreateAndPatchAll(typeof(PatchScnLogo));
-*/        }
+        }
 
         private void OnDestroy()
         {

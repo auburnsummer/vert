@@ -12,22 +12,18 @@ namespace RDVertPlugin
 {
     public static class PatchScnEditor
     {
-        static Dictionary<LevelEventType, Tab> oldConstants = new Dictionary<LevelEventType, Tab>();
-
-        static GameObject runScriptThingo;
-
         [HarmonyPrefix]
         [HarmonyPatch(typeof(scnEditor), "Start")]
         public static bool Start(scnEditor __instance)
         {
-/*            Vert.Log.LogInfo("We are here now");
-            // hmmmmmmmmmmmmm
+            Vert.Log.LogInfo("We are here now");
+            // honestly no idea what I was doing here.
             var pathToContentGameObject = "Canvas/Level Editor Panel/MovementPanel/Left Panel (Inspector)/InspectorPanelManager/Viewport/Content";
             var contentGameObject = GameObject.Find(pathToContentGameObject);
             var contentGameObjectTransform = contentGameObject.transform;
             Vert.Log.LogInfo(contentGameObject.name);
             Vert.Log.LogInfo("=====================");
-            InspectorPanel[] componentsInChildren =  Resources.FindObjectsOfTypeAll<InspectorPanel>();
+            InspectorPanel[] componentsInChildren = Resources.FindObjectsOfTypeAll<InspectorPanel>();
             Vert.Log.LogInfo(componentsInChildren.Length);
             foreach (InspectorPanel component in componentsInChildren)
             {
@@ -44,11 +40,11 @@ namespace RDVertPlugin
                     Component.Destroy(ourNewGameObject.GetComponent<InspectorPanel>());
                     // and attach our new inspector panel!
                     InspectorPanel_2782 panel = (InspectorPanel_2782)ourNewGameObject.AddComponent(typeof(InspectorPanel_2782));
-                    
+
                 }
                 Vert.Log.LogInfo(component.name);
                 Vert.Log.LogInfo(component.gameObject.name);
-            }*/
+            }
 
             return true;
         }
@@ -81,11 +77,12 @@ namespace RDVertPlugin
                 .InstructionEnumeration();
         }
 
-        [HarmonyPrefix]
+/*        [HarmonyPrefix]
         [HarmonyPatch(typeof(scnEditor), "AddNewEventControl")]
         public static bool AddNewEventControl(scnEditor __instance, LevelEventControl_Base eventControl, Tab tab)
         {
-            Vert.Log.LogInfo("ADD NEW EVENT CONTROL");
+            return true;
+            *//*Vert.Log.LogInfo("ADD NEW EVENT CONTROL");
             Vert.Log.LogInfo(eventControl.ToString());
             TabSection tabSection = __instance.tabSections[(int)tab];
             Vert.Log.LogInfo("1");
@@ -107,7 +104,7 @@ namespace RDVertPlugin
             eventControl.GetComponent<RectTransform>().SetParent(parent, false);
             Vert.Log.LogInfo("7");
 
-            return false;
-        }
+            return false;*//*
+        }*/
     }
 }

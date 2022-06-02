@@ -44,6 +44,8 @@ namespace RDVertPlugin
             return true;
         }
 
+        // this is used when we want to obtain a reference to a private function in the class.
+        // it's the Harmony equivalent of MonoMod's [MonoModPublic]
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(scnMenu), "TransitionToScene")]
         public static void TransitionToScene(scnMenu instance, string scene)
@@ -59,10 +61,11 @@ namespace RDVertPlugin
             Text[] ___optionsText
            )
         {
+            // Is our option selected?
             string name = ___optionsText[___currentOption].gameObject.name;
-            Vert.Log.LogInfo(name);
             if (String.Equals(name, "VertMenuOption"))
             {
+                // prepare to enter the V E R T Z O N E
                 Vert.Log.LogInfo("Entering VERT......");
 
                 Vert.NowHijacking = true;
@@ -71,6 +74,7 @@ namespace RDVertPlugin
             } else
             {
                 // we still want you to be able to quit out and go to normal editor.
+                // the editor _should_ behave normally when Vert.NowHijacking is false.
                 Vert.NowHijacking = false;
                 ConfigureRDEditorConstants.Unconfigure();
             }

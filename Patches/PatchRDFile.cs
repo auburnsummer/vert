@@ -19,10 +19,12 @@ namespace RDVertPlugin
             // this is to make it harder to open VERT files in the normal editor.
             if (!Vert.NowHijacking)
             {
-                return false;
+                // just return true, which keeps the chain without touching anything.
+                return true;
             }
             if (path.EndsWith(".rdlevel"))
             {
+                // redirect it to vert instead, then pass it on
                 path = String.Format("{0}.vert", path);
             }
             return true;

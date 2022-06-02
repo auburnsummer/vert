@@ -29,14 +29,5 @@ namespace RDLevelEditor
         {
             RDVertPlugin.Vert.Log.LogInfo("RUNNING 2782 NOW");
         }
-
-        public override string CustomControlName()
-        {
-            // so RD will try to load a LevelEventControl_MiniScriptEditor, via Resources.Load
-            // we patch Resources.Load to intercept.
-            // the thing we return should have a InspectorPanel of some sort attached.
-            // check out PatchResources.cs...
-            return "MiniScriptEditor";
-        }
     }
 }

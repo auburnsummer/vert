@@ -10,6 +10,7 @@ namespace RDVertPlugin
 {
     public static class PatchStandaloneFileBrowser
     {
+        // vert: if we are looking for an rdlevel, look for an rdlevel.vert instead.
         [HarmonyPrefix]
         [HarmonyPatch(typeof(StandaloneFileBrowser), "OpenFilePanel", new Type[] { typeof(string), typeof(string), typeof(ExtensionFilter[]), typeof(bool) } )]
         public static bool OpenFilePanel(string title, string directory, ref ExtensionFilter[] extensions, bool multiselect)

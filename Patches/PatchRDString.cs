@@ -8,6 +8,8 @@ namespace RDVertPlugin
         [HarmonyPatch(typeof(RDString), "Get")]
         public static bool Get(string key, ref string __result)
         {
+            // Patch strings we are using.
+            // in the future, we can check language here as well.
             if (key == "mainMenu.VertMenuOption")
             {
                 __result = "Project VERT rdlevel version :eyes:";
