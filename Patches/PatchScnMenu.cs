@@ -64,14 +64,7 @@ namespace RDVertPlugin
             if (String.Equals(name, "VertMenuOption"))
             {
                 Vert.Log.LogInfo("Entering VERT......");
-                string[] resourceNames = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-                foreach (string resource in resourceNames)
-                {
-                    Vert.Log.LogInfo(resource);
-                }
-                // okay so you can't make scenes at runtime
-                // there is a way to make scenes by importing an "AssetBundle" but it sounds complicated
-                // instead we're going to hijack scnLogo
+
                 Vert.NowHijacking = true;
                 ConfigureRDEditorConstants.Configure();
                 TransitionToScene(__instance, "scnEditor");

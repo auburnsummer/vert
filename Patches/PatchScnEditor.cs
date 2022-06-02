@@ -20,7 +20,7 @@ namespace RDVertPlugin
         [HarmonyPatch(typeof(scnEditor), "Start")]
         public static bool Start(scnEditor __instance)
         {
-            Vert.Log.LogInfo("We are here now");
+/*            Vert.Log.LogInfo("We are here now");
             // hmmmmmmmmmmmmm
             var pathToContentGameObject = "Canvas/Level Editor Panel/MovementPanel/Left Panel (Inspector)/InspectorPanelManager/Viewport/Content";
             var contentGameObject = GameObject.Find(pathToContentGameObject);
@@ -48,8 +48,17 @@ namespace RDVertPlugin
                 }
                 Vert.Log.LogInfo(component.name);
                 Vert.Log.LogInfo(component.gameObject.name);
-            }
+            }*/
 
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(scnEditor), "CreateEventControl")]
+        public static bool CreateEventControl(scnEditor __instance, LevelEvent_Base levelEvent, Tab tab, bool skipSaveState)
+        {
+            Vert.Log.LogInfo("CREATE EVENT CONTROL");
+            Vert.Log.LogInfo(levelEvent.CustomControlName());
             return true;
         }
 
@@ -70,6 +79,35 @@ namespace RDVertPlugin
                 )
                 .Set(OpCodes.Call, AccessTools.Method(typeof(Utils), "GetType", new Type[] { typeof(string) }))
                 .InstructionEnumeration();
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(scnEditor), "AddNewEventControl")]
+        public static bool AddNewEventControl(scnEditor __instance, LevelEventControl_Base eventControl, Tab tab)
+        {
+            Vert.Log.LogInfo("ADD NEW EVENT CONTROL");
+            Vert.Log.LogInfo(eventControl.ToString());
+            TabSection tabSection = __instance.tabSections[(int)tab];
+            Vert.Log.LogInfo("1");
+            eventControl.tabSection = tabSection;
+            Vert.Log.LogInfo("2");
+            eventControl.container.Add(eventControl);
+            Vert.Log.LogInfo("3");
+
+            eventControl.UpdateUI();
+            Vert.Log.LogInfo("4");
+
+            __instance.eventControls.Add(eventControl);
+            Vert.Log.LogInfo("5");
+
+            Transform parent;
+            parent = tabSection.containerTransform;
+            Vert.Log.LogInfo("6");
+
+            eventControl.GetComponent<RectTransform>().SetParent(parent, false);
+            Vert.Log.LogInfo("7");
+
+            return false;
         }
     }
 }
