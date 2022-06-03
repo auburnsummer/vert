@@ -8,6 +8,10 @@ namespace RDLevelEditor
 {
     public class LevelEvent_2782 : LevelEvent_Base
     {
+        public string text;
+
+        public bool show;
+
         public override void OnCreate()
         {
             base.OnCreate();
@@ -16,18 +20,30 @@ namespace RDLevelEditor
 
         public override string Encode()
         {
-            return base.EncodeBaseProperties(false); 
+            return base.EncodeBaseProperties(false) + RDEditorUtils.EncodeBool("show", this.show, false) + RDEditorUtils.EncodeUnicodeString("text", this.text, true);
         }
+
 
         public override void Decode(Dictionary<string, object> dict)
         {
             base.Decode(dict);
-            // this.executionTime = LevelEventExecutionTime.OnBar;
+            this.text = (dict["text"] as string);
+            this.show = (dict.ContainsKey("show") && (bool)dict["show"]);
+            this.executionTime = this.show ? LevelEventExecutionTime.OnPrebar : LevelEventExecutionTime.OnBar;
+
         }
+
 
         public override void Run()
         {
             RDVertPlugin.Vert.Log.LogInfo("RUNNING 2782 NOW");
+            RDVertPlugin.Vert.Log.LogInfo(this.text);
+
+        }
+
+        public override string ToString()
+        {
+            return base.ToString();
         }
     }
 }

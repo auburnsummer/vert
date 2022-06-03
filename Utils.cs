@@ -11,7 +11,6 @@ namespace RDVertPlugin
         // https://stackoverflow.com/a/11811046
         public static Type GetType(string typeName)
         {
-            Vert.Log.LogInfo(typeName);
             var type = Type.GetType(typeName);
             if (type != null) return type;
             foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
@@ -23,6 +22,11 @@ namespace RDVertPlugin
                 }
             }
             return null;
+        }
+
+        public static String NullToString(Object any)
+        {
+            return any == null ? "IT IS NULL" : any.ToString();
         }
     }
 }

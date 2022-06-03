@@ -13,8 +13,8 @@ namespace RDVertPlugin
     public static class PatchScnEditor
     {
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(scnEditor), "Start")]
-        public static bool Start(scnEditor __instance)
+        [HarmonyPatch(typeof(scnEditor), "Awake")]
+        public static bool Awake(scnEditor __instance)
         {
             Vert.Log.LogInfo("We are here now");
             // honestly no idea what I was doing here.
@@ -32,6 +32,7 @@ namespace RDVertPlugin
                     // we're using Comment as a base to construct our panel.
                     var templateGameObject = component.gameObject;
                     var ourNewGameObject = GameObject.Instantiate(templateGameObject, contentGameObjectTransform);
+
                     // now, ourNewGameObject has everything that templateGameObject has.....
                     // afaik, all gameobjects have a transform that indicate that gameobject's position.
                     // this has one of those too! the transform is right where a panel should be, so we don't touch it.
@@ -42,8 +43,6 @@ namespace RDVertPlugin
                     InspectorPanel_2782 panel = (InspectorPanel_2782)ourNewGameObject.AddComponent(typeof(InspectorPanel_2782));
 
                 }
-                Vert.Log.LogInfo(component.name);
-                Vert.Log.LogInfo(component.gameObject.name);
             }
 
             return true;
@@ -76,35 +75,5 @@ namespace RDVertPlugin
                 .Set(OpCodes.Call, AccessTools.Method(typeof(Utils), "GetType", new Type[] { typeof(string) }))
                 .InstructionEnumeration();
         }
-
-/*        [HarmonyPrefix]
-        [HarmonyPatch(typeof(scnEditor), "AddNewEventControl")]
-        public static bool AddNewEventControl(scnEditor __instance, LevelEventControl_Base eventControl, Tab tab)
-        {
-            return true;
-            *//*Vert.Log.LogInfo("ADD NEW EVENT CONTROL");
-            Vert.Log.LogInfo(eventControl.ToString());
-            TabSection tabSection = __instance.tabSections[(int)tab];
-            Vert.Log.LogInfo("1");
-            eventControl.tabSection = tabSection;
-            Vert.Log.LogInfo("2");
-            eventControl.container.Add(eventControl);
-            Vert.Log.LogInfo("3");
-
-            eventControl.UpdateUI();
-            Vert.Log.LogInfo("4");
-
-            __instance.eventControls.Add(eventControl);
-            Vert.Log.LogInfo("5");
-
-            Transform parent;
-            parent = tabSection.containerTransform;
-            Vert.Log.LogInfo("6");
-
-            eventControl.GetComponent<RectTransform>().SetParent(parent, false);
-            Vert.Log.LogInfo("7");
-
-            return false;*//*
-        }*/
     }
 }

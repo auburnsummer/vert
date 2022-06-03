@@ -28,7 +28,8 @@ namespace RDVertPlugin
                 typeof(PatchRDFile),
                 typeof(PatchStandaloneFileBrowser),
                 typeof(PatchScnEditor),
-                typeof(PatchLevelEvent_Base)
+                typeof(PatchLevelEvent_Base),
+                typeof(PatchRDLevelData)
             };
 
             foreach (Type patch in patches)
