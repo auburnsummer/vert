@@ -24,7 +24,7 @@ namespace RDVertPlugin
             bool ok = ColorUtility.TryParseHtmlString(s.value, out c);
             if (!ok)
             {
-                Vert.Log.LogWarning(String.Format("Color {0} not parsable, defaulting to black", s.value));
+                Vert.Log.LogWarning(string.Format("Color {0} not parsable, defaulting to black", s.value));
             }
             return c;
         }
