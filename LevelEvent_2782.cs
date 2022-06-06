@@ -1,4 +1,5 @@
 ﻿using Miniscript;
+using RDVertPlugin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,6 @@ namespace RDLevelEditor
         public string text;
         public string id;
 
-        public bool show;
 
         public Interpreter inte;
 
@@ -25,7 +25,6 @@ namespace RDLevelEditor
         public override string Encode()
         {
             return base.EncodeBaseProperties(false) + 
-                   RDEditorUtils.EncodeBool("show", this.show, false) +
                    RDEditorUtils.EncodeUnicodeString("text", this.text, false) + 
                    RDEditorUtils.EncodeUnicodeString("id", this.id, true);
         }
@@ -36,18 +35,19 @@ namespace RDLevelEditor
             base.Decode(dict);
             this.text = (dict["text"] as string);
             this.id = dict["id"] as string;
-            this.show = (dict.ContainsKey("show") && (bool)dict["show"]);
-            this.executionTime = this.show ? LevelEventExecutionTime.OnPrebar : LevelEventExecutionTime.OnBar;
+            this.executionTime = LevelEventExecutionTime.OnBar;
+        }
+
+        public override void CopyFromInternal(LevelEvent_Base levelEvent)
+        {
+            LevelEvent_2782 levelEvent_RunScript = (LevelEvent_2782)levelEvent;
+            this.text = levelEvent_RunScript.text;
+            this.id = System.Guid.NewGuid().ToString();
         }
 
         public override System.Collections.IEnumerator Prepare()
         {
-            inte = new Interpreter();
-            inte.standardOutput = (string s) => RDVertPlugin.Vert.Log.LogInfo(s);
-            inte.implicitOutput = (string s) => RDVertPlugin.Vert.Log.LogDebug(s);
-            inte.errorOutput = (string s) => RDVertPlugin.Vert.Log.LogError(s);
-            inte.Reset(this.text);
-            inte.Compile();
+            Singleton<ExecutorManager>.Instance.PrepareScriptForExecution(this.id, this.text);
             this.prepared = true;
             yield break;
         }
@@ -55,7 +55,10 @@ namespace RDLevelEditor
 
         public override void Run()
         {
-            inte.RunUntilDone(0.01);
+            base.RunOnBeat(delegate
+            {
+                Singleton<ExecutorManager>.Instance.ActivateScript(this.id);
+            }, false, null, -1, false, false);
         }
 
         public override string ToString()

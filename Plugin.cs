@@ -21,6 +21,8 @@ namespace RDVertPlugin
             // Plugin startup logic
             Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
 
+            RDVertPlugin.Intrinsics.initializeIfNeeded();
+
             Type[] patches = new Type[]
             {
                 typeof(PatchScnMenu),
@@ -29,7 +31,8 @@ namespace RDVertPlugin
                 typeof(PatchStandaloneFileBrowser),
                 typeof(PatchScnEditor),
                 typeof(PatchLevelEvent_Base),
-                typeof(PatchRDLevelData)
+                typeof(PatchRDLevelData),
+                typeof(PatchScrConductor)
             };
 
             foreach (Type patch in patches)
