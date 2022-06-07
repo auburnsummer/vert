@@ -52,13 +52,17 @@ namespace RDLevelEditor
             yield break;
         }
 
-
         public override void Run()
         {
             base.RunOnBeat(delegate
             {
                 Singleton<ExecutorManager>.Instance.ActivateScript(this.id);
             }, false, null, -1, false, false);
+        }
+
+        public override void OnDelete()
+        {
+            Singleton<ExecutorManager>.Instance.DeactivateScript(this.id);
         }
 
         public override string ToString()

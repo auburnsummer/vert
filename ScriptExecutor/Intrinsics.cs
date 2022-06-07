@@ -42,6 +42,87 @@ namespace RDVertPlugin
                 return new Intrinsic.Result(bpm);
             };
 
+            // bar
+            // return the current bar of the conductor.
+            f = Intrinsic.Create("bar");
+            f.code = (context, partialResult) =>
+            {
+                int bar = scrConductor.instance.barNumber;
+                return new Intrinsic.Result(bar);
+            };
+
+            // beat
+            // return the current beat of the conductor.
+            f = Intrinsic.Create("beat");
+            f.code = (context, partialResult) =>
+            {
+                float beat = scrConductor.instance.currentBeat;
+                return new Intrinsic.Result(beat);
+            };
+
+            // deltaTime
+            // same as RDC deltaTime
+            f = Intrinsic.Create("deltaTime");
+            f.code = (context, partialResult) =>
+            {
+                return new Intrinsic.Result(Time.deltaTime);
+            };
+
+            // unscaledDeltaTime
+            // same as RDC unscaledDeltaTime
+            f = Intrinsic.Create("unscaledDeltaTime");
+            f.code = (context, partialResult) =>
+            {
+                return new Intrinsic.Result(Time.unscaledDeltaTime);
+            };
+
+            // audioPos
+            // directly AudioSettings.dspTime. This is ultimately the "source of truth" for all RD events...
+            // there are a few variants which incorporate calibration.
+            f = Intrinsic.Create("audioPos");
+            f.code = (context, partialResult) =>
+            {
+                return new Intrinsic.Result(scrConductor.instance.audioPos);
+            };
+
+            // inputPos
+            // dspTime that incorporates the calibration setting.
+            f = Intrinsic.Create("inputPos");
+            f.code = (context, partialResult) =>
+            {
+                return new Intrinsic.Result(scrConductor.instance.inputPos_p1);
+            };
+
+            // visualPos
+            // dspTime that incorporates the visual calibration setting.
+            f = Intrinsic.Create("visualPos");
+            f.code = (context, partialResult) =>
+            {
+                return new Intrinsic.Result(scrConductor.instance.visualPos);
+            };
+
+            /***
+             * 
+             * INPUT
+             * 
+             * 
+             *****/
+
+            // button
+            // return True if a button is pressed down.
+            // NOTE: this returns True _every_ frame it's pressed.
+            f = Intrinsic.Create("button");
+            f.AddParam("key");
+            f.code = (context, partialResult) =>
+            {
+                string key = context.GetVar("key").ToString();
+                if (Input.GetKey(key))
+                {
+                    return Intrinsic.Result.True;
+                }
+                return Intrinsic.Result.False;
+            };
+
 
             /***
              * 

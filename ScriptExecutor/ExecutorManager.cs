@@ -28,7 +28,14 @@ namespace RDVertPlugin
                 Interpreter interpreter = new Interpreter();
                 interpreter.standardOutput = (string s) => RDVertPlugin.Vert.Log.LogInfo(s);
                 interpreter.implicitOutput = (string s) => RDVertPlugin.Vert.Log.LogDebug(s);
-                interpreter.errorOutput = (string s) => RDVertPlugin.Vert.Log.LogError(s);
+                interpreter.errorOutput = (string s) =>
+                {
+                    if (scnGame.instance != null)
+                    {
+                        scnGame.instance.hud.SetStatusText(s, Color.red, 4f);
+                    }
+                    RDVertPlugin.Vert.Log.LogError(s);
+                };
                 this.interpreterMap[key] = interpreter;
             }
             return this.interpreterMap[key];
@@ -37,6 +44,11 @@ namespace RDVertPlugin
         public void ActivateScript(string key)
         {
             this.activeScriptKeys.Add(key);
+        }
+
+        public void DeactivateScript(string key)
+        {
+            this.activeScriptKeys.Remove(key);
         }
 
         // Not called Update() on purpose. This gets injected into scrConductor's update, ExecutorManager doesn't have an Update

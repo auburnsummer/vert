@@ -21,6 +21,16 @@ namespace RDVertPlugin
                 __result = "Run Script";
                 return false;
             }
+            if (key == "editor.openInExternalEditor")
+            {
+                __result = "Open in external editor";
+                return false;
+            }
+            if (key == "editor.currentlyEditingInExternalEditor")
+            {
+                __result = "Editing externally...";
+                return false;
+            }
             return true;
         }
     }

@@ -17,7 +17,10 @@ namespace RDVertPlugin
             // ...it will happen in the same frame instead of the next frame.
             // i think?? the way RD schedules events is cool but also i don't understand it at all
 
-            Singleton<ExecutorManager>.Instance.DoUpdate();
+            if (scnBase.instance != null && scnGame.instance != null && scnGame.instance.started && scnGame.instance.startTheGameCalled && !scnGame.instance.paused)
+            {
+                Singleton<ExecutorManager>.Instance.DoUpdate();
+            }
             return true;
         }
 
