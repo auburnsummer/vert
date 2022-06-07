@@ -15,8 +15,7 @@ how scripting can be used in RD levels.
 NOTE: This is in an **experimental** stage. It might never get to a point where I feel that it is useful enough to justify
 the resulting custom levels split it would cause. In its current form it doesn't do anything more interesting than RDCode does.
 
-WARNING: Posting any levels that use VERT to the Rhythm Doctor Lounge is a violation of the server rules. Do not discuss
-this in the Rhythm Doctor Lounge.
+WARNING: Posting any levels that use VERT to the Rhythm Doctor Lounge is a violation of the server rules. 
 
 Goals
 -----
