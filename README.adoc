@@ -17,6 +17,9 @@ the resulting custom levels split it would cause. In its current form it doesn't
 
 WARNING: Posting any levels that use VERT to the Rhythm Doctor Lounge is a violation of the server rules. 
 
+video::https://user-images.githubusercontent.com/37142182/172521755-0d2569e8-6568-46cd-8422-ebebb82a6fee.mp4[]
+
+
 Goals
 -----
 
