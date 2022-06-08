@@ -1,4 +1,5 @@
 ﻿using Miniscript;
+using RDLevelEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace RDVertPlugin
             f = Intrinsic.Create("bar");
             f.code = (context, partialResult) =>
             {
-                int bar = scrConductor.instance.barNumber;
+                int bar = scrConductor.instance.barNumberUpdateOnBar;
                 return new Intrinsic.Result(bar);
             };
 
@@ -58,6 +59,25 @@ namespace RDVertPlugin
             {
                 float beat = scrConductor.instance.currentBeat;
                 return new Intrinsic.Result(beat);
+            };
+
+            // eventBar
+            // return the bar of this Run Script event.
+            // the difference between "bar" and "eventBar" is that eventBar is where the event is, bar is where the playhead is.
+            f = Intrinsic.Create("eventBar");
+            f.code = (context, partialResult) =>
+            {
+                LevelEvent_2782 evt = Singleton<ExecutorManager>.Instance.activeEvent();
+                return new Intrinsic.Result(evt.bar);
+            };
+
+            // eventBeat
+            // return the beat of this Run Script event.
+            f = Intrinsic.Create("eventBeat");
+            f.code = (context, partialResult) =>
+            {
+                LevelEvent_2782 evt = Singleton<ExecutorManager>.Instance.activeEvent();
+                return new Intrinsic.Result(evt.beat);
             };
 
             // deltaTime
@@ -101,6 +121,7 @@ namespace RDVertPlugin
                 return new Intrinsic.Result(scrConductor.instance.visualPos);
             };
 
+
             /***
              * 
              * INPUT
@@ -126,7 +147,7 @@ namespace RDVertPlugin
 
             /***
              * 
-             * EVENTS
+             * ACTIONS
              * 
              * 
              ****/
@@ -156,6 +177,19 @@ namespace RDVertPlugin
                 }
                 return Intrinsic.Result.Null;
             };
+
+            /***
+             * 
+             * DECORATIONS
+             * 
+             * 
+             ****/
+
+            // RD internally calls these 'sprites', but the Miniscript interface is still called decos.
+
+            // decos
+            // returns a map of the current decos?
+
 
         }
     }

@@ -115,6 +115,12 @@ namespace RDLevelEditor
                     }
                 }.Start();
             }
+            else
+            {
+                RDVertPlugin.Vert.Log.LogInfo("SORRY!!!!!!");
+                RDVertPlugin.Vert.Log.LogInfo("The auto-opening is only Windows for now. In the meantime, please open this file:");
+                RDVertPlugin.Vert.Log.LogInfo(filePath);
+            }
         }
 
         public void Update()

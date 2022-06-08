@@ -1,4 +1,5 @@
 ﻿using Miniscript;
+using RDLevelEditor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace RDVertPlugin
     public class ExecutorManager : Singleton<ExecutorManager>
     {
         public Dictionary<string, Interpreter> interpreterMap;
+        public Dictionary<string, LevelEvent_2782> levelEventMap;
         public List<string> activeScriptKeys;
+        public string runningScript;
 
         float TIME_ALLOWANCE = 0.008f; // 8ms of each 16ms frame is the maximum allotted time for MiniScript. 
 
@@ -19,6 +22,7 @@ namespace RDVertPlugin
         {
             this.interpreterMap = new Dictionary<string, Interpreter>();
             this.activeScriptKeys = new List<string>();
+            this.levelEventMap = new Dictionary<string, LevelEvent_2782>();
         }
 
         public Interpreter GetInterpreter(string key)
@@ -51,11 +55,24 @@ namespace RDVertPlugin
             this.activeScriptKeys.Remove(key);
         }
 
+        public LevelEvent_2782 activeEvent()
+        {
+            if (this.runningScript == null)
+            {
+                return null;
+            }
+            return this.levelEventMap[this.runningScript];
+        }
+
         // Not called Update() on purpose. This gets injected into scrConductor's update, ExecutorManager doesn't have an Update
+        // why? because I want more control over when scripts gets run in RD's event lifecycle. 
         public void DoUpdate()
         {
             float timeLimit = Time.maximumDeltaTime + TIME_ALLOWANCE;
             // iterate backwards, so that when we remove keys we don't skip by accident.
+            // scheduling: we have a total allowed time. each script gets allotted that time / number of scripts left.
+            // so if a script exits earlier, this gives the next scripts more time to run.
+            // todo: add a RD surgery setting to allow scripts to bypass the scheduler
             for (int i = activeScriptKeys.Count - 1; i >= 0; i--)
             {
                 string key = activeScriptKeys[i];
@@ -66,6 +83,7 @@ namespace RDVertPlugin
                     timeLimitForThisScript = 0.001f; // 1 ms
                     RDVertPlugin.Vert.Log.LogWarning(String.Format("We ran out of time, frame drops may occur... {0}", key));
                 }
+                this.runningScript = key;
                 interpreter.RunUntilDone(timeLimitForThisScript);
                 if (interpreter.done)
                 {
