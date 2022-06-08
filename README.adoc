@@ -1,0 +1,36 @@
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+VERT
+----
+
+VERT is an implementation of https://miniscript.org[MiniScript] for use in Rhythm Doctor levels. It is an experiment to see
+how scripting can be used in RD levels.
+
+NOTE: This is in an **experimental** stage. It might never get to a point where I feel that it is useful enough to justify
+the resulting custom levels split it would cause. In its current form it doesn't do anything more interesting than RDCode does.
+
+WARNING: Posting any levels that use VERT to the Rhythm Doctor Lounge is a violation of the server rules. 
+
+video::https://user-images.githubusercontent.com/37142182/172521755-0d2569e8-6568-46cd-8422-ebebb82a6fee.mp4[]
+
+
+Goals
+-----
+
+In particular, I want to explore the concept of "hub" levels, which contain links to other levels with a cohesive narrative. The
+main game, for instance, contains a mix of gameplay levels, cutscene levels, and short scenes within the level select. With
+scripting, it may be possible to implement a "level select" _as_ an RD level.
+
+What might such a level need?
+
+* Unlike normal levels, a level select doesn't proceed linearly with time. Instead, it transitions between states based on the
+player input. 
+* A level select would need to be able to store information about a player's progress.
+* A level select would need to able to play other levels, and then go back to the level select.
+
