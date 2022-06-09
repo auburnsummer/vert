@@ -17,7 +17,11 @@ the resulting custom levels split it would cause. In its current form it doesn't
 
 WARNING: Posting any levels that use VERT to the Rhythm Doctor Lounge is a violation of the server rules. 
 
-video::https://user-images.githubusercontent.com/37142182/172521755-0d2569e8-6568-46cd-8422-ebebb82a6fee.mp4[]
+TIP: I'm looking for a new name for the project. Probably more overtly medically themed to keep in line with existing tools
+and phrases such as "surgery" and "scalpel". In particular, VERT sounds similar to things like HOMvert, which I want to avoid.
+Please suggest names via https://docs.google.com/forms/d/e/1FAIpQLSf-TA6c03U7U6hxWShuVgBCTNBnompPi6st2F45u_-HC6W5BQ/viewform?usp=sf_link[this form].
+
+video::https://user-images.githubusercontent.com/37142182/172770903-e1cbef92-71d8-4de0-a191-d7122ba718b1.mp4[]
 
 
 Goals
@@ -33,4 +37,26 @@ What might such a level need?
 player input. 
 * A level select would need to be able to store information about a player's progress.
 * A level select would need to able to play other levels, and then go back to the level select.
+
+I found that there are some levels already that have to incorporate state-based behaviour. These levels often work by encoding the
+state in either RDCode values or the position of the playhead.
+
+MiniScript
+----------
+
+I evaluated several languages and decided on MiniScript:
+
+* MiniScript is explicitly designed as a beginner friendly language that is easy to learn.
+* The MiniScript API is very suitable for injecting in a mod. Stuff like Lua MoonScript, for instance, relies on annotations or build steps which I, as a modder, do not have access to.
+* The MiniScript VM is very small and compact, and it should be possible to serialize and deserialize the entire VM safely. This will be important for the level select scenario (we need to serialize the host level VMs, load a new level, and then restore the state of the host level afterwards)
+
+A syntax guide to MiniScript can be found https://miniscript.org/files/MiniScript-Manual.pdf[here].
+
+MiniScript is a little bare and lacks some features. What we might end up doing is "MiniScript with RD enhancements", adding in certain syntax features
+as it becomes apparent that they are needed. But for now, it's vanilla MiniScript.
+
+Installation
+------------
+
+tbd
 
