@@ -13,6 +13,9 @@ namespace RDVertPlugin
     {
         public Dictionary<string, Interpreter> interpreterMap;
         public Dictionary<string, LevelEvent_2782> levelEventMap;
+
+        public Dictionary<string, ValMap> sharedMap;
+
         public List<string> activeScriptKeys;
         public string runningScript;
 
@@ -23,6 +26,7 @@ namespace RDVertPlugin
             this.interpreterMap = new Dictionary<string, Interpreter>();
             this.activeScriptKeys = new List<string>();
             this.levelEventMap = new Dictionary<string, LevelEvent_2782>();
+            this.sharedMap = new Dictionary<string, ValMap>();
         }
 
         public Interpreter GetInterpreter(string key)
@@ -43,6 +47,14 @@ namespace RDVertPlugin
                 this.interpreterMap[key] = interpreter;
             }
             return this.interpreterMap[key];
+        }
+
+        public void Reset()
+        {
+            this.sharedMap.Clear();
+            this.interpreterMap.Clear();
+            this.levelEventMap.Clear();
+            this.activeScriptKeys.RemoveAll((s) => true);
         }
 
         public void ActivateScript(string key)

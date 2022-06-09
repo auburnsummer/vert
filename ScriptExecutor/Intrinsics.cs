@@ -20,6 +20,7 @@ namespace RDVertPlugin
                 return;
             }
             initialized = true;
+
             Intrinsic f;
 
             /***
@@ -163,6 +164,51 @@ namespace RDVertPlugin
                 return Intrinsic.Result.False;
             };
 
+            /***
+             * 
+             * CROSS-SCRIPT COMMUNICATION
+             * 
+             * 
+             *****/
+
+            // export
+            // exports the namespace with a specific name.
+            // name (string, required): name to export.
+            f = Intrinsic.Create("export");
+            f.AddParam("name");
+            f.code = (context, partialResult) =>
+            {
+                var name = context.GetLocalString("name");
+                if (name == null)
+                {
+                    throw new RuntimeException("Call to export must include a name.");
+                }
+                var gContext = context.vm.globalContext;
+                var vars = gContext.variables;
+                Singleton<ExecutorManager>.Instance.sharedMap[name] = vars;
+                return Intrinsic.Result.Null;
+            };
+
+            // import
+            // Returns something in the shared namespace.
+            f = Intrinsic.Create("import");
+            f.AddParam("name");
+            f.code = (context, partialResult) =>
+            {
+                var map = Singleton<ExecutorManager>.Instance.sharedMap;
+                var name = context.GetLocalString("name");
+                if (name == null)
+                {
+                    throw new RuntimeException("Call to import must include a name.");
+                }
+
+                if (!map.ContainsKey(name))
+                {
+                    throw new RuntimeException("Key did not exist in the map");
+                }
+
+                return new Intrinsic.Result(map[name]);
+            };
 
             /***
              * 
@@ -246,6 +292,7 @@ namespace RDVertPlugin
                     return new Intrinsic.Result(sprite.transform.localPosition.x);
                 };
                 decoMap["x"] = f2.GetFunc();
+
                 // y
                 // return the y position of the deco.
                 f2 = Intrinsic.Create("");
@@ -256,6 +303,7 @@ namespace RDVertPlugin
                 decoMap["y"] = f2.GetFunc();
 
                 // setting x and y just kinda immediately yeets the sprite to the location.
+                // setting these while a tween is occuring is janky.
                 decoMap.assignOverride = (key, value) =>
                 {
                     if (key.ToString() == "x")
