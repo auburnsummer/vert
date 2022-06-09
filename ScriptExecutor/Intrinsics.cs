@@ -183,9 +183,16 @@ namespace RDVertPlugin
                 {
                     throw new RuntimeException("Call to export must include a name.");
                 }
-                var gContext = context.vm.globalContext;
-                var vars = gContext.variables;
-                Singleton<ExecutorManager>.Instance.sharedMap[name] = vars;
+
+                var f1 = Intrinsic.Create("");
+                f1.code = (context2, partialResult2) =>
+                {
+                    // context2 is the import caller, context is the export caller.
+                    var gContext = context.vm.globalContext;
+                    var vars = gContext.variables;
+                    return new Intrinsic.Result(vars);
+                };
+                Singleton<ExecutorManager>.Instance.sharedMap[name] = f1.GetFunc();
                 return Intrinsic.Result.Null;
             };
 
