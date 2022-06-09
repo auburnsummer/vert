@@ -48,6 +48,7 @@ namespace RDLevelEditor
         public override System.Collections.IEnumerator Prepare()
         {
             Singleton<ExecutorManager>.Instance.PrepareScriptForExecution(this.id, this.text);
+            Singleton<ExecutorManager>.Instance.DeactivateScript(this.id);
             Singleton<ExecutorManager>.Instance.levelEventMap[this.id] = this;
             this.prepared = true;
             yield break;

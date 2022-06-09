@@ -121,6 +121,25 @@ namespace RDVertPlugin
                 return new Intrinsic.Result(scrConductor.instance.visualPos);
             };
 
+            // waitUntil
+            // pause execution until the specified bar + beat has passed.
+            // bar(int, default=1): the bar
+            // beat(float, default=0): the beat
+            f = Intrinsic.Create("waitUntil");
+            f.AddParam("bar", 1f);
+            f.AddParam("beat", 0f);  // the first beat in a bar is beat 0
+            f.code = (context, partialResult) =>
+            {
+                int bar = scrConductor.instance.barNumberUpdateOnBar;
+                float beat = scrConductor.instance.currentBeat;
+                int targetBar = context.GetLocalInt("bar");
+                float targetBeat = context.GetLocalFloat("beat");
+                if (bar != targetBar || beat < targetBeat)
+                {
+                    return Intrinsic.Result.Waiting;
+                }
+                return Intrinsic.Result.Null;
+            };
 
             /***
              * 
@@ -187,10 +206,72 @@ namespace RDVertPlugin
 
             // RD internally calls these 'sprites', but the Miniscript interface is still called decos.
 
-            // decos
-            // returns a map of the current decos?
+            // decoIds
+            // returns a list of the current deco idss.
+            f = Intrinsic.Create("decoIds");
+            f.code = (context, partialResult) =>
+            {
+                if (scnGame.instance.currentLevel != null && scnGame.instance.currentLevel is Level_Custom)
+                {
+                    Level_Custom level = (Level_Custom)scnGame.instance.currentLevel;
+                    var sprites = level.sprites;
 
+                    var list = new ValList(sprites.Keys.Select(s => new ValString(s) as Value).ToList());
+                    return new Intrinsic.Result(list);
+                }
+                return Intrinsic.Result.Null;
+            };
 
+            // getDeco
+            // returns a dictionary of info about a deco.
+            f = Intrinsic.Create("getDeco");
+            f.AddParam("id", "");
+            f.code = (context, partialResult) =>
+            {
+                var decoMap = new ValMap();
+                Level_Custom level = (Level_Custom)scnGame.instance.currentLevel;
+                var sprites = level.sprites;
+                string id = context.GetLocalString("id");
+                if (!sprites.ContainsKey(id))
+                {
+                    throw new RuntimeException(String.Format("Deco ID {0} not found", id));
+                }
+                var sprite = sprites[context.GetLocalString("id")];
+                Intrinsic f2;
+                // x
+                // return the x position of the deco.
+                f2 = Intrinsic.Create(""); // anonymous.
+                f2.code = (context, partialResult) =>
+                {
+                    return new Intrinsic.Result(sprite.transform.localPosition.x);
+                };
+                decoMap["x"] = f2.GetFunc();
+                // y
+                // return the y position of the deco.
+                f2 = Intrinsic.Create("");
+                f2.code = (context, partialResult) =>
+                {
+                    return new Intrinsic.Result(sprite.transform.localPosition.y);
+                };
+                decoMap["y"] = f2.GetFunc();
+
+                // setting x and y just kinda immediately yeets the sprite to the location.
+                decoMap.assignOverride = (key, value) =>
+                {
+                    if (key.ToString() == "x")
+                    {
+                        // i heard you liked casting
+                        sprite.transform.LocalMoveX((float)((ValNumber)value).value);
+                    }
+                    if (key.ToString() == "y")
+                    {
+                        sprite.transform.LocalMoveY((float)((ValNumber)value).value);
+
+                    }
+                    return true;
+                };
+                return new Intrinsic.Result(decoMap);
+            };
         }
     }
 }
